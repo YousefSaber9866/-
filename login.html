@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الجمعية التعاونية للبناء والإسكان</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-section">
+            <h1 class="main-title">الجمعية التعاونية للبناء و الاسكان</h1>
+            <p class="subtitle">لاعضاء نادي الزمالك</p>
+            <p class="registration-info">المشهره برقم 165 تعاونيات الجيزة لسنة 1992</p>
+        </div>
+
+        <p class="welcome-message">مرحباً بك.</p>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <input type="text" class="form-control" id="username" placeholder="اسم المستخدم" required>
+            </div>
+            
+            <div class="form-group">
+                <input type="password" class="form-control" id="password" placeholder="كلمة المرور" required>
+            </div>
+
+            <button type="submit" class="btn-login">دخول</button>
+            
+            <div class="loading" id="loading">جاري تسجيل الدخول...</div>
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+        </form>
+
+        <div class="footer-info">
+            <p style="color: #c41e3a; font-weight: bold; margin-bottom: 15px;">
+                هذه الصفحة خاصة بمجلس إدارة الجمعية و لا يسمح بإستخدامها غير السادة أعضاء مجلس الإدارة وهم:
+            </p>
+            <div class="board-members">
+                <div class="member">
+                    <span class="position">رئيس مجلس الإدارة</span>
+                    <span class="name">الأستاذ الدكتور / ثروت حكيم شرقاوى</span>
+                </div>
+                <div class="member">
+                    <span class="position">نائب رئيس مجلس الإدارة</span>
+                    <span class="name">السيد الأستاذ / أشرف سمير اسماعيل</span>
+                </div>
+                <div class="member">
+                    <span class="position">المدير المالي للمجلس</span>
+                    <span class="name">السيد الأستاذ / محمد ممدوح مسعود</span>
+                </div>
+                <div class="member">
+                    <span class="position">سكرتير الجمعية</span>
+                    <span class="name">السيدة الأستاذة / نيفين محمد الدباغ</span>
+                </div>
+                <div class="member">
+                    <span class="position">عضو مجلس الادارة</span>
+                    <span class="name">السيدة الأستاذة / مايسة محمد مصطفى</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="login.js"></script>
+</body>
+</html>

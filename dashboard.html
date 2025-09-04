@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الشقق السكنية - حي الزمالك</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <div class="container">
+        <div id="main-menu">
+            <div class="header">
+                <div class="user-info" id="userInfo">مرحباً بك</div>
+                <button class="logout-btn" onclick="logout()">تسجيل خروج</button>
+                <h1>🏢 إدارة الشقق السكنية</h1>
+                <p>نظام إدارة حي الزمالك - الجمعية التعاونية للبناء والإسكان</p>
+            </div>
+
+            <div class="options-grid">
+                <div class="option-card" onclick="showSection('crud-section')">
+                    <div class="option-icon">📋</div>
+                    <div class="option-title">عرض الملفات</div>
+                    <div class="option-description">إضافة، تعديل، حذف ومشاهدة بيانات الأعضاء</div>
+                </div>
+
+                <div class="option-card" onclick="showSection('search-section')">
+                    <div class="option-icon">🔍</div>
+                    <div class="option-title">بحث عن عضو</div>
+                    <div class="option-description">البحث عن عضو معين وعرض بياناته</div>
+                </div>
+
+                <div class="option-card" onclick="logout()">
+                    <div class="option-icon">🚪</div>
+                    <div class="option-title">تسجيل خروج</div>
+                    <div class="option-description">الخروج من النظام والعودة لصفحة تسجيل الدخول</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CRUD Section -->
+        <div id="crud-section" class="content-section">
+            <button class="back-btn" onclick="showMainMenu()">← العودة للقائمة الرئيسية</button>
+            
+            <h2>إدارة بيانات الأعضاء - حي الزمالك</h2>
+            
+            <div class="crud-container">
+                <div class="crud-buttons">
+                    <button class="crud-btn" onclick="showForm('add-form')">➕ إضافة عضو جديد</button>
+                    <button class="crud-btn edit" onclick="showForm('edit-form')">✏️ تعديل عضو</button>
+                    <button class="crud-btn delete" onclick="showForm('delete-form')">🗑️ حذف عضو</button>
+                    <button class="crud-btn view" onclick="viewAllMembers()">👥 عرض جميع الأعضاء</button>
+                </div>
+
+                <!-- Add Form -->
+                <div id="add-form" class="form-container">
+                    <h3>إضافة عضو جديد</h3>
+                    <form onsubmit="addMember(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>اسم العضو *</label>
+                                <input type="text" id="add-name" required placeholder="أدخل اسم العضو الكامل">
+                            </div>
+                            <div class="form-group">
+                                <label>رقم العضوية *</label>
+                                <input type="number" id="add-membership" required placeholder="مثال: 1001">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>رقم الشقة *</label>
+                                <input type="number" id="add-apartment" required placeholder="مثال: 5">
+                            </div>
+                            <div class="form-group">
+                                <label>رقم العمارة *</label>
+                                <input type="number" id="add-building" required placeholder="مثال: 1">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>الحي *</label>
+                                <input type="text" id="add-district" required placeholder="أدخل اسم الحي">
+                            </div>
+                            <div class="form-group">
+                                <label>المبلغ المدفوع (جنيه مصري)</label>
+                                <input type="number" id="add-amount" step="0.01" min="0" placeholder="0.00">
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="submit-btn">إضافة العضو</button>
+                            <button type="button" class="cancel-btn" onclick="hideAllForms()">إلغاء</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Edit Form -->
+                <div id="edit-form" class="form-container">
+                    <h3>تعديل بيانات العضو</h3>
+                    <form onsubmit="editMember(event)">
+                        <!-- Search Box للبحث عن العضو -->
+                        <div class="member-search-container">
+                            <div class="form-group">
+                                <label>ابحث عن العضو للتعديل *</label>
+                                <input type="text" id="edit-search-input" placeholder="ابحث بالاسم أو رقم العضوية..." oninput="searchForMember('edit')" autocomplete="off">
+                            </div>
+                            
+                            <!-- قائمة نتائج البحث -->
+                            <div id="edit-search-results" class="search-results-dropdown"></div>
+                            
+                            <!-- العضو المختار -->
+                            <div id="edit-selected-member" class="selected-member" style="display: none;">
+                                <span id="edit-selected-info"></span>
+                                <button type="button" onclick="clearSelectedMember('edit')" class="clear-selection">✕</button>
+                            </div>
+                            
+                            <!-- Hidden input للـ ID -->
+                            <input type="hidden" id="edit-member-id">
+                        </div>
+
+                        <!-- باقي الفورم -->
+                        <div class="form-fields" id="edit-form-fields" style="display: none;">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>اسم العضو *</label>
+                                    <input type="text" id="edit-name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>رقم العضوية *</label>
+                                    <input type="number" id="edit-membership" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>رقم الشقة *</label>
+                                    <input type="number" id="edit-apartment" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>رقم العمارة *</label>
+                                    <input type="number" id="edit-building" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>الحي *</label>
+                                    <input type="text" id="edit-district" required placeholder="أدخل اسم الحي">
+                                </div>
+                                <div class="form-group">
+                                    <label>المبلغ المدفوع (جنيه مصري)</label>
+                                    <input type="number" id="edit-amount" step="0.01" min="0">
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="submit-btn">حفظ التعديلات</button>
+                                <button type="button" class="cancel-btn" onclick="hideAllForms()">إلغاء</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Delete Form -->
+                <div id="delete-form" class="form-container">
+                    <h3>حذف عضو</h3>
+                    <form onsubmit="deleteMember(event)">
+                        <!-- Search Box للبحث عن العضو -->
+                        <div class="member-search-container">
+                            <div class="form-group">
+                                <label>ابحث عن العضو للحذف *</label>
+                                <input type="text" id="delete-search-input" placeholder="ابحث بالاسم أو رقم العضوية..." oninput="searchForMember('delete')" autocomplete="off">
+                            </div>
+                            
+                            <!-- قائمة نتائج البحث -->
+                            <div id="delete-search-results" class="search-results-dropdown"></div>
+                            
+                            <!-- العضو المختار -->
+                            <div id="delete-selected-member" class="selected-member" style="display: none;">
+                                <span id="delete-selected-info"></span>
+                                <button type="button" onclick="clearSelectedMember('delete')" class="clear-selection">✕</button>
+                            </div>
+                            
+                            <!-- Hidden input للـ ID -->
+                            <input type="hidden" id="delete-member-id">
+                        </div>
+
+                        <div class="form-actions" id="delete-form-actions" style="display: none;">
+                            <button type="submit" class="submit-btn" style="background: linear-gradient(145deg, #f44336, #d32f2f);">حذف العضو</button>
+                            <button type="button" class="cancel-btn" onclick="hideAllForms()">إلغاء</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Members Table -->
+                <div id="members-table" style="display: none;">
+                    <h3>جميع الأعضاء - حي الزمالك</h3>
+                    <div id="table-container"></div>
+                </div>
+
+                <div id="crud-messages"></div>
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <div id="search-section" class="content-section">
+            <button class="back-btn" onclick="showMainMenu()">← العودة للقائمة الرئيسية</button>
+            
+            <h2>البحث عن عضو</h2>
+            
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" class="search-input" id="search-input" placeholder="أدخل اسم العضو للبحث...">
+                    <button class="search-btn" onclick="searchMember()">🔍 بحث</button>
+                </div>
+
+                <div id="search-result" style="display: none;">
+                    <h3>نتيجة البحث:</h3>
+                    <div id="search-table-container"></div>
+                </div>
+
+                <div id="search-messages"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
