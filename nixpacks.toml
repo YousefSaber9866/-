@@ -1,0 +1,8 @@
+[packages]
+python = "3.9"
+
+[build]
+cmds = ["pip install -r requirements.txt"]
+
+[start]
+cmd = "python app.py"
